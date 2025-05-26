@@ -1,7 +1,7 @@
 <?php
 
 $host = 'localhost';
-$db   = 'car_inventory';
+$db   = 'car_inventory_manager';
 $user = 'root';
 $pass = '';
 $charset = 'utf8mb4';
