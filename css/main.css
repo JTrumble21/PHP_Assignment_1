@@ -1,13 +1,23 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  scroll-behavior: smooth;
-}
-
 body {
   font-family: "Noto Serif", serif;
-  color: #fff;
-  background-color: #14580c;
-  font-size: 1.4em;
+  margin: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+th {
+  background-color: #f4f4f4;
+}
+
+header, footer {
+  text-align: center;
 }
