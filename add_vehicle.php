@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Handle file upload
     if (isset($_FILES['vehicle_image']) && $_FILES['vehicle_image']['error'] === UPLOAD_ERR_OK) {
-        $uploadsDir = 'uploads/';
+        $uploadDir = 'assets/images/';
         if (!is_dir($uploadsDir)) {
             mkdir($uploadsDir, 0755, true); // Create uploads folder if it doesn't exist
         }

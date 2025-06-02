@@ -16,7 +16,7 @@ try {
     $pdo = new PDO($dsn, $user, $pass, $options);
 
     // Include image_path in SELECT
-    $stmt = $pdo->query("SELECT year, make, model, trim, color, price, image_path FROM cars ORDER BY year DESC");
+    $stmt = $pdo->query("SELECT id, year, make, model, trim, color, price, image_path FROM cars ORDER BY year DESC");
     $cars = $stmt->fetchAll();
 } catch (\PDOException $e) {
     echo "<p>Error connecting to database: " . $e->getMessage() . "</p>";
@@ -42,14 +42,15 @@ try {
         <table>
             <thead>
                 <tr>
-                    <th>Photo</th>
-                    <th>Year</th>
-                    <th>Make</th>
-                    <th>Model</th>
-                    <th>Trim</th>
-                    <th>Color</th>
-                    <th>Price</th>
-                </tr>
+                <th>Image</th>
+                <th>Year</th>
+                <th>Make</th>
+                <th>Model</th>
+                <th>Trim</th>
+                <th>Color</th>
+                <th>Price</th>
+                <th>Actions</th>
+    </tr>
             </thead>
             <tbody>
            
@@ -57,11 +58,12 @@ try {
                 <?php foreach ($cars as $car): ?>
                     <tr>
                         <td>
-                            <?php if (!empty($car['image_path']) && file_exists($car['image_path'])): ?>
+                            <?php if (!empty($car['image_path']) && file_exists($baseDir . $car['image_path'])): ?>
                                 <img src="<?= htmlspecialchars($car['image_path']) ?>" alt="Vehicle Image" class="thumbnail" />
                             <?php else: ?>
-                                <span>Images Coming Soon!</span>
+                                <span>Image coming soon!</span>
                             <?php endif; ?>
+
                         </td>
                         <td><?= htmlspecialchars($car['year']) ?></td>
                         <td><?= htmlspecialchars($car['make']) ?></td>
@@ -69,6 +71,7 @@ try {
                         <td><?= htmlspecialchars($car['trim']) ?></td>
                         <td><?= htmlspecialchars($car['color']) ?></td>
                         <td>$<?= number_format($car['price'], 2) ?></td>
+                        <td><a href="edit_vehicle.php?id=<?= $car['id'] ?>">Edit</a></td>
                     </tr>
                 <?php endforeach; ?>
             <?php else: ?>

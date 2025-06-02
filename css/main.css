@@ -76,8 +76,15 @@ form input[type="submit"]:hover {
 }
 
 .thumbnail {
-  width: 80px;
+  width: 75px;
   height: auto;
-  border-radius: 4px;
   object-fit: cover;
+  border-radius: 4px;
+  display: block;
+}
+
+.no-image {
+  color: #888;
+  font-size: 0.9em;
+  font-style: italic;
 }
