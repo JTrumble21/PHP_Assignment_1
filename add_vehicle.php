@@ -9,8 +9,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $color = $_POST['color'];
     $price = $_POST['price'];
 
-    $query = "INSERT INTO cars (year, make, model, trim, color, price)
-              VALUES (:year, :make, :model, :trim, :color, :price)";
+    $imagePath = null;
+
+    if (isset($_FILES['vehicle_image']) && $_FILES['vehicle_image']['error'] === UPLOAD_ERR_OK) {
+        $uploadDir = 'uploads/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
+        $tmpName = $_FILES['vehicle_image']['tmp_name'];
+        $originalName = basename($_FILES['vehicle_image']['name']);
+        $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+        $newFileName = uniqid('car_', true) . '.' . $ext;
+        $destination = $uploadDir . $newFileName;
+
+        if (move_uploaded_file($tmpName, $destination)) {
+            $imagePath = $destination;
+        }
+    }
+
+    $query = "INSERT INTO cars (year, make, model, trim, color, price, image_path)
+              VALUES (:year, :make, :model, :trim, :color, :price, :image_path)";
     $statement = $db->prepare($query);
     $statement->bindValue(':year', $year);
     $statement->bindValue(':make', $make);
@@ -18,6 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $statement->bindValue(':trim', $trim);
     $statement->bindValue(':color', $color);
     $statement->bindValue(':price', $price);
+    $statement->bindValue(':image_path', $imagePath);
     $statement->execute();
     $statement->closeCursor();
 
@@ -36,16 +56,5 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body>
   <main>
     <h2>Add a New Vehicle</h2>
-    <form action="add_vehicle.php" method="post">
-      <label>Year: <input type="number" name="year" required></label><br>
-      <label>Make: <input type="text" name="make" required></label><br>
-      <label>Model: <input type="text" name="model" required></label><br>
-      <label>Trim: <input type="text" name="trim"></label><br>
-      <label>Color: <input type="text" name="color"></label><br>
-      <label>Price: <input type="number" name="price" required></label><br>
-      <input type="submit" value="Add Vehicle">
-    </form>
-    <p><a href="index.php">← Back to Inventory</a></p>
-  </main>
-</body>
-</html>
+    <form action="add_vehicle.php" method="post" enctype="multipart/form-data">
+      <label>Year: <inp

@@ -13,10 +13,9 @@ try {
     // Switch to the new DB
     $pdo->exec("USE car_inventory_manager");
 
-    // Drop the table if it already exists
     $pdo->exec("DROP TABLE IF EXISTS cars");
 
-    // Create cars table
+    // Create cars table with image_path column
     $sql = "CREATE TABLE cars (
         id INT AUTO_INCREMENT PRIMARY KEY,
         year INT NOT NULL,
@@ -24,11 +23,12 @@ try {
         model VARCHAR(50) NOT NULL,
         trim VARCHAR(50),
         color VARCHAR(30),
-        price DECIMAL(10,2) NOT NULL
+        price DECIMAL(10,2) NOT NULL,
+        image_path VARCHAR(255) NULL
     )";
     $pdo->exec($sql);
 
-    // Insert seed data
+    // Insert seed data (image_path left NULL for now)
     $pdo->exec("
         INSERT INTO cars (year, make, model, trim, color, price) VALUES
         (2021, 'Toyota', 'Camry', 'SE', 'Blue', 22000.00),

@@ -23,12 +23,61 @@ th {
 header, footer {
   text-align: center;
 }
-.add-button {
+.add-vehicle {
   display: inline-block;
+  margin-top: 15px;
   margin-bottom: 15px;
   padding: 8px 14px;
-  background-color: #78c88c;
-  color: white;
+  background-color: #bdf7cb;
+  border: 1px solid #000;
+  color: rgb(0, 0, 0);
   text-decoration: none;
   border-radius: 5px;
+}
+
+form {
+  max-width: 320px;
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+form label {
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #333;
+}
+
+form input[type="text"],
+form input[type="number"],
+form input[type="submit"] {
+  width: 100%;
+  padding: 8px 10px;
+  margin-top: 4px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
+  text-align: left;
+}
+
+form input[type="submit"] {
+  margin-top: 20px;
+  background-color: #78c88c;
+  border: none;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+form input[type="submit"]:hover {
+  background-color: #5da06e;
+}
+
+.thumbnail {
+  width: 80px;
+  height: auto;
+  border-radius: 4px;
+  object-fit: cover;
 }

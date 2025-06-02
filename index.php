@@ -15,7 +15,8 @@ $options = [
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
 
-    $stmt = $pdo->query("SELECT year, make, model, trim, color, price FROM cars ORDER BY year DESC");
+    // Include image_path in SELECT
+    $stmt = $pdo->query("SELECT year, make, model, trim, color, price, image_path FROM cars ORDER BY year DESC");
     $cars = $stmt->fetchAll();
 } catch (\PDOException $e) {
     echo "<p>Error connecting to database: " . $e->getMessage() . "</p>";
@@ -41,6 +42,7 @@ try {
         <table>
             <thead>
                 <tr>
+                    <th>Photo</th>
                     <th>Year</th>
                     <th>Make</th>
                     <th>Model</th>
@@ -50,9 +52,17 @@ try {
                 </tr>
             </thead>
             <tbody>
+           
             <?php if (count($cars) > 0): ?>
                 <?php foreach ($cars as $car): ?>
                     <tr>
+                        <td>
+                            <?php if (!empty($car['image_path']) && file_exists($car['image_path'])): ?>
+                                <img src="<?= htmlspecialchars($car['image_path']) ?>" alt="Vehicle Image" class="thumbnail" />
+                            <?php else: ?>
+                                <span>Images Coming Soon!</span>
+                            <?php endif; ?>
+                        </td>
                         <td><?= htmlspecialchars($car['year']) ?></td>
                         <td><?= htmlspecialchars($car['make']) ?></td>
                         <td><?= htmlspecialchars($car['model']) ?></td>
@@ -63,11 +73,12 @@ try {
                 <?php endforeach; ?>
             <?php else: ?>
                 <tr>
-                 <td colspan="6" class="empty">No cars in inventory.</td>
+                 <td colspan="7" class="empty">No cars in inventory.</td>
                 </tr>
             <?php endif; ?>
             </tbody>
         </table>
+       <a href="add_vehicle.php" class="add-vehicle">Add Vehicle</a>
     </section>
 </main>
 
