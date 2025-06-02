@@ -20,7 +20,7 @@ try {
         make VARCHAR(50) NOT NULL,
         model VARCHAR(50) NOT NULL,
         trim VARCHAR(50),
-        color VARCHAR(30)
+        color VARCHAR(30),
         price INT NOT NULL,
     )";
 $pdo->exec("
