@@ -58,11 +58,12 @@ try {
                 <?php foreach ($cars as $car): ?>
                     <tr>
                         <td>
-                            <?php if (!empty($car['image_path']) && file_exists($baseDir . $car['image_path'])): ?>
-                                <img src="<?= htmlspecialchars($car['image_path']) ?>" alt="Vehicle Image" class="thumbnail" />
-                            <?php else: ?>
-                                <span>Image coming soon!</span>
-                            <?php endif; ?>
+                        <?php if (!empty($car['image_path'])): ?>
+                            <img src="<?= htmlspecialchars($car['image_path']) ?>" alt="Vehicle Image" class="thumbnail" />
+                        <?php else: ?>
+                            <span>Image coming soon!</span>
+                        <?php endif; ?>
+
 
                         </td>
                         <td><?= htmlspecialchars($car['year']) ?></td>
