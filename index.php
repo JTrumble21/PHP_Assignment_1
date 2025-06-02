@@ -28,7 +28,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <title>Dealership Inventory System</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
 <header>
