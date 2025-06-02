@@ -15,7 +15,7 @@ $options = [
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
 
-    $stmt = $pdo->query("SELECT year, make, model, trim, color FROM cars ORDER BY year DESC");
+    $stmt = $pdo->query("SELECT year, make, model, trim, color, price FROM cars ORDER BY year DESC");
     $cars = $stmt->fetchAll();
 } catch (\PDOException $e) {
     echo "<p>Error connecting to database: " . $e->getMessage() . "</p>";
@@ -46,6 +46,7 @@ try {
                     <th>Model</th>
                     <th>Trim</th>
                     <th>Color</th>
+                    <th>Price</th>
                 </tr>
             </thead>
             <tbody>
@@ -57,6 +58,7 @@ try {
                         <td><?= htmlspecialchars($car['model']) ?></td>
                         <td><?= htmlspecialchars($car['trim']) ?></td>
                         <td><?= htmlspecialchars($car['color']) ?></td>
+                         <td><?= htmlspecialchars($car['price']) ?></td>
                     </tr>
                 <?php endforeach; ?>
             <?php else: ?>

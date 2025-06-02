@@ -21,14 +21,15 @@ try {
         model VARCHAR(50) NOT NULL,
         trim VARCHAR(50),
         color VARCHAR(30)
+        price INT NOT NULL,
     )";
 $pdo->exec("
     INSERT INTO cars (year, make, model, trim, color) VALUES
-    (2021, 'Toyota', 'Camry', 'SE', 'Blue'),
-    (2020, 'Honda', 'Civic', 'EX', 'Red'),
-    (2019, 'Ford', 'Escape', 'Titanium', 'White'),
-    (2022, 'Chevrolet', 'Malibu', 'LT', 'Black'),
-    (2023, 'Tesla', 'Model 3', 'Performance', 'Silver');
+    (2021, 'Toyota', 'Camry', 'SE', 'Blue', '22,000'),
+    (2020, 'Honda', 'Civic', 'EX', 'Red', '19,000'),
+    (2019, 'Ford', 'Escape', 'Titanium', 'White' , '21,000'),
+    (2022, 'Chevrolet', 'Malibu', 'LT', 'Black' , '34,000'),
+    (2023, 'Tesla', 'Model 3', 'Performance', 'Silver' , '65,000');
   "); 
 
     $pdo->exec($sql);

@@ -1,7 +1,7 @@
 body {
   font-family: "Noto Serif", serif;
   margin: 20px;
-  background-color: #f5f5dc;
+  background-color: #f9f9f9;
 }
 
 table {
@@ -22,4 +22,13 @@ th {
 
 header, footer {
   text-align: center;
+}
+.add-button {
+  display: inline-block;
+  margin-bottom: 15px;
+  padding: 8px 14px;
+  background-color: #78c88c;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
 }
