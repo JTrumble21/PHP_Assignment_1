@@ -22,7 +22,7 @@ try {
         trim VARCHAR(50),
         color VARCHAR(30)
     )";
-$db->exec("
+$pdo->exec("
     INSERT INTO cars (year, make, model, trim, color) VALUES
     (2021, 'Toyota', 'Camry', 'SE', 'Blue'),
     (2020, 'Honda', 'Civic', 'EX', 'Red'),
@@ -30,7 +30,7 @@ $db->exec("
     (2022, 'Chevrolet', 'Malibu', 'LT', 'Black'),
     (2023, 'Tesla', 'Model 3', 'Performance', 'Silver');
   "); 
-  
+
     $pdo->exec($sql);
     echo "Database and table created successfully.";
 } catch (PDOException $e) {
