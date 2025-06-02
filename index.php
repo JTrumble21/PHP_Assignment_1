@@ -58,12 +58,12 @@ try {
                         <td><?= htmlspecialchars($car['model']) ?></td>
                         <td><?= htmlspecialchars($car['trim']) ?></td>
                         <td><?= htmlspecialchars($car['color']) ?></td>
-                         <td><?= htmlspecialchars($car['price']) ?></td>
+                        <td>$<?= number_format($car['price'], 2) ?></td>
                     </tr>
                 <?php endforeach; ?>
             <?php else: ?>
                 <tr>
-                    <td colspan="5" class="empty">No cars in inventory.</td>
+                 <td colspan="6" class="empty">No cars in inventory.</td>
                 </tr>
             <?php endif; ?>
             </tbody>
