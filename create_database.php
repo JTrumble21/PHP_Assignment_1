@@ -24,7 +24,7 @@ try {
         price DECIMAL(10,2) NOT NULL
     )";
 $pdo->exec("
-    INSERT INTO cars (year, make, model, trim, color) VALUES
+    INSERT INTO cars (year, make, model, trim, color, price) VALUES
     (2021, 'Toyota', 'Camry', 'SE', 'Blue', '22000.00'),
     (2020, 'Honda', 'Civic', 'EX', 'Red', '19000.00'),
     (2019, 'Ford', 'Escape', 'Titanium', 'White' , '21000.00'),
