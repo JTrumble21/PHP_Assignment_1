@@ -5,17 +5,18 @@ body {
 
 table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 20px 0;
   margin-top: 20px;
 }
 
 th, td {
   border: 1px solid #ccc;
-  padding: 10px;
+   padding: 8px 12px;
 }
 
 th {
-  background-color: #f4f4f4;
+  background-color: #78c88c;
 }
 
 header, footer {
