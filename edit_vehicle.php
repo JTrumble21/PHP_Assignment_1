@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require("database.php");
 
 $id = $_GET['id'] ?? null;
@@ -29,8 +33,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $trim = $_POST['trim'];
     $color = $_POST['color'];
     $price = $_POST['price'];
-    $imagePath = $vehicle['image_path'];
+    $imagePath = $vehicle['image_path']; // Default to existing image path
 
+    // Handle image upload
     if (isset($_FILES['vehicle_image']) && $_FILES['vehicle_image']['error'] === UPLOAD_ERR_OK) {
         $uploadDir = 'assets/images/';
         if (!is_dir($uploadDir)) {
@@ -42,11 +47,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
         $newFileName = uniqid('car_', true) . '.' . $ext;
         $destination = $uploadDir . $newFileName;
-        move_uploaded_file($tmpName, $destination);
-
 
         if (move_uploaded_file($tmpName, $destination)) {
-            // Optionally delete the old image
+            // Delete old image if it exists
             if (!empty($vehicle['image_path']) && file_exists($vehicle['image_path'])) {
                 unlink($vehicle['image_path']);
             }
@@ -54,6 +57,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
     }
 
+    // Perform update
     $updateQuery = "UPDATE cars SET year = :year, make = :make, model = :model, trim = :trim,
                     color = :color, price = :price, image_path = :image_path WHERE id = :id";
     $updateStmt = $db->prepare($updateQuery);
@@ -68,35 +72,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $updateStmt->execute();
     $updateStmt->closeCursor();
 
+    // Redirect after update
     header("Location: index.php");
     exit();
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Edit Vehicle</title>
-  <link rel="stylesheet" href="css/main.css" />
-</head>
-<body>
-  <main>
-    <h2>Edit Vehicle</h2>
-    <form action="edit_vehicle.php?id=<?= htmlspecialchars($id) ?>" method="post" enctype="multipart/form-data">
-      <label><input type="number" name="year" placeholder="Year" value="<?= htmlspecialchars($vehicle['year']) ?>" required></label><br>
-      <label><input type="text" name="make" placeholder="Make" value="<?= htmlspecialchars($vehicle['make']) ?>" required></label><br>
-      <label><input type="text" name="model" placeholder="Model" value="<?= htmlspecialchars($vehicle['model']) ?>" required></label><br>
-      <label><input type="text" name="trim" placeholder="Trim" value="<?= htmlspecialchars($vehicle['trim']) ?>"></label><br>
-      <label><input type="text" name="color" placeholder="Color" value="<?= htmlspecialchars($vehicle['color']) ?>"></label><br>
-      <label><input type="number" name="price" placeholder="Price" value="<?= htmlspecialchars($vehicle['price']) ?>" required></label><br>
-      <?php if ($vehicle['image_path']): ?>
-       <img src="<?= htmlspecialchars($vehicle['image_path']) ?>" alt="Vehicle Image" class="thumbnail">
-      <?php endif; ?>
-      <label><input type="file" name="vehicle_image" accept="image/*"></label><br>
-      <input type="submit" value="Update Vehicle">
-    </form>
-    <p><a href="index.php">← Back to Inventory</a></p>
-  </main>
-</body>
-</html>
