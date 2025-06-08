@@ -68,6 +68,9 @@ try {
                     <tr>
                         <td>
                             <?php if (!empty($car['image_path'])): ?>
+                                <!-- Debug line: show image path -->
+                                <p>DEBUG Image path: <?= htmlspecialchars($car['image_path']) ?></p>
+                                
                                 <img src="<?= htmlspecialchars($car['image_path']) ?>" alt="Vehicle Image" class="thumbnail" />
                             <?php else: ?>
                                 <span>Image coming soon!</span>
@@ -94,7 +97,7 @@ try {
 </main>
 
 <footer>
-    <p>Used Cars Copyright © <?= date("Y") ?> - All rights reserved</p>
+    <p>Used Cars Copyright © <?= date("2025") ?> - All rights reserved</p>
 </footer>
 </body>
 </html>
