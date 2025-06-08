@@ -13,9 +13,15 @@ session_start();
 
 <div class="login-form">
     <h2>Login</h2>
+    
+    <?php if (isset($_SESSION['login_error'])): ?>
+        <p class="error"><?= htmlspecialchars($_SESSION['login_error']) ?></p>
+        <?php unset($_SESSION['login_error']); ?>
+    <?php endif; ?>
+
     <form action="login.php" method="post">
-        <label for="username">Username:</label>
-        <input type="text" name="username" id="username" required>
+        <label for="user_name">Username:</label>
+        <input type="text" name="user_name" id="user_name" required>
 
         <label for="password">Password:</label>
         <input type="password" name="password" id="password" required>
@@ -26,3 +32,4 @@ session_start();
 
 </body>
 </html>
+
