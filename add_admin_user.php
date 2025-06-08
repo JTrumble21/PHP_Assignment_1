@@ -14,8 +14,8 @@ $options = [
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
 
-    $userName = 'admin';          // Change this username
-    $plainPassword = 'inventory';  // Change this password
+    $userName = 'admin';           // Username you want to create
+    $plainPassword = 'inventory';  // Password you want to use
 
     $hashedPassword = password_hash($plainPassword, PASSWORD_DEFAULT);
 
@@ -28,3 +28,5 @@ try {
 } catch (PDOException $e) {
     echo "Error: " . $e->getMessage();
 }
+?>
+
