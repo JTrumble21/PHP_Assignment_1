@@ -1,4 +1,11 @@
 <?php
+session_start();
+
+// Redirect to login form if not logged in
+if (!isset($_SESSION['isLoggedIn']) || $_SESSION['isLoggedIn'] !== true) {
+    header("Location: login_form.php");
+    exit();
+}
 
 $host = 'localhost';
 $db   = 'car_inventory_manager';
@@ -34,6 +41,9 @@ try {
 <body>
 <header>
     <h1>Dealership Inventory System</h1>
+    <div class="user-bar">
+        <p>Welcome, <?= htmlspecialchars($_SESSION['userName']) ?> | <a href="logout.php">Logout</a></p>
+    </div>
 </header>
 
 <main>
@@ -42,29 +52,26 @@ try {
         <table>
             <thead>
                 <tr>
-                <th>Image</th>
-                <th>Year</th>
-                <th>Make</th>
-                <th>Model</th>
-                <th>Trim</th>
-                <th>Color</th>
-                <th>Price</th>
-                <th>Actions</th>
-    </tr>
+                    <th>Image</th>
+                    <th>Year</th>
+                    <th>Make</th>
+                    <th>Model</th>
+                    <th>Trim</th>
+                    <th>Color</th>
+                    <th>Price</th>
+                    <th>Actions</th>
+                </tr>
             </thead>
             <tbody>
-           
             <?php if (count($cars) > 0): ?>
                 <?php foreach ($cars as $car): ?>
                     <tr>
                         <td>
-                        <?php if (!empty($car['image_path'])): ?>
-                            <img src="<?= htmlspecialchars($car['image_path']) ?>" alt="Vehicle Image" class="thumbnail" />
-                        <?php else: ?>
-                            <span>Image coming soon!</span>
-                        <?php endif; ?>
-
-
+                            <?php if (!empty($car['image_path'])): ?>
+                                <img src="<?= htmlspecialchars($car['image_path']) ?>" alt="Vehicle Image" class="thumbnail" />
+                            <?php else: ?>
+                                <span>Image coming soon!</span>
+                            <?php endif; ?>
                         </td>
                         <td><?= htmlspecialchars($car['year']) ?></td>
                         <td><?= htmlspecialchars($car['make']) ?></td>
@@ -77,12 +84,12 @@ try {
                 <?php endforeach; ?>
             <?php else: ?>
                 <tr>
-                 <td colspan="7" class="empty">No cars in inventory.</td>
+                    <td colspan="8" class="empty">No cars in inventory.</td>
                 </tr>
             <?php endif; ?>
             </tbody>
         </table>
-       <a href="add_vehicle.php" class="add-vehicle">Add Vehicle</a>
+        <a href="add_vehicle.php" class="add-vehicle">Add Vehicle</a>
     </section>
 </main>
 

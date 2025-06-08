@@ -88,3 +88,47 @@ form input[type="submit"]:hover {
   font-size: 0.9em;
   font-style: italic;
 }
+
+.login-form {
+    width: 300px;
+    margin: 80px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.login-form h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.login-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.login-form input[type="text"],
+.login-form input[type="password"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.login-form input[type="submit"] {
+    width: 100%;
+    background-color: #78c88c;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.login-form input[type="submit"]:hover {
+    background-color: #66b07a;
+}
