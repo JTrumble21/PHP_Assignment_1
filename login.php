@@ -1,51 +1,36 @@
 <?php
 session_start();
 
-// get data from the form
-$user_name = filter_input(INPUT_POST, 'user_name');    
-$password = filter_input(INPUT_POST, 'password');
-
 require_once('database.php');
 
+// get data from form
+$user_name = filter_input(INPUT_POST, 'user_name');
+$password = filter_input(INPUT_POST, 'password');
+
 $query = 'SELECT password FROM users WHERE userName = :userName';
-$statement1 = $db->prepare($query);
+$statement = $db->prepare($query);
+$statement->bindValue(':userName', $user_name);
+$statement->execute();
+$row = $statement->fetch();
+$statement->closeCursor();
 
-$statement1->bindValue(':userName', $user_name);
-
-$statement1->execute();
-$row = $statement1->fetch();    
-
-$statement1->closeCursor();
-
-if (!$row) 
-{
-    $_SESSION = [];
-    session_destroy();
-
-    $url = "/PHP_Assignment_1/login_form.php";  // Redirect back to login form
-    header("Location: " . $url);
-    die();
+if (!$row) {
+    $_SESSION['login_error'] = "Invalid username or password.";
+    header("Location: login_form.php");
+    exit();
 }
 
 $hash = $row['password'];
+$is_valid = password_verify($password, $hash);
 
-$_SESSION["isLoggedIn"] = password_verify($password, $hash);
-
-if ($_SESSION["isLoggedIn"] == TRUE)
-{
+if ($is_valid) {
+    $_SESSION["isLoggedIn"] = true;
     $_SESSION["userName"] = $user_name;
-
-    $url = "/PHP_Assignment_1/login_confirmation.php";
-    header("Location: " . $url);
-    die();
-}
-elseif ($_SESSION["isLoggedIn"] == FALSE)
-{
-    $_SESSION = [];
-    session_destroy();
-
-    $url = "/PHP_Assignment_1/login_form.php";
-    header("Location: " . $url);
-    die();
+    header("Location: login_confirmation.php");
+    exit();
+} else {
+    $_SESSION['login_error'] = "Invalid username or password.";
+    header("Location: login_form.php");
+    exit();
 }
 ?>
