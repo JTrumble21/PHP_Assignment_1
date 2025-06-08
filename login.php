@@ -23,9 +23,9 @@
         $_SESSION = [];
         session_destroy();
 
-        $url = "login_form.php";
-        header("Location: " . $url);
-        die();
+      $url = "/PHP_Assignment_1/login_confirmation.php";
+      header("Location: " . $url);
+      die();
     }
 
     $hash = $row['password'];
@@ -36,17 +36,17 @@
     {
         $_SESSION["userName"] = $user_name;
 
-        $url = "login_confirmation.php";
-        header("Location: " . $url);
-        die();
+      $url = "/PHP_Assignment_1/login_confirmation.php";
+      header("Location: " . $url);
+      die();
     }
     elseif ($_SESSION["isLoggedIn"] == FALSE)
     {
         $_SESSION = [];
         session_destroy();
 
-        $url = "login_form.php";
-        header("Location: " . $url);
-        die();
+      $url = "/PHP_Assignment_1/login_form.php";
+      header("Location: " . $url);
+      die();
     }
 ?>
