@@ -10,7 +10,7 @@ $password = filter_input(INPUT_POST, 'password');
 
 require_once('database.php'); 
 
-$query = 'SELECT password_hash FROM users WHERE username = :username';
+$query = 'SELECT password FROM users WHERE username = :username';
 $statement = $db->prepare($query);
 $statement->bindValue(':username', $user_name);
 $statement->execute();
@@ -19,7 +19,7 @@ $row = $statement->fetch();
 $statement->closeCursor();
 
 if ($row) {
-    $hash = $row['password_hash'];
+   $hash = $row['password'];
 
     if (password_verify($password, $hash)) {
         $_SESSION["isLoggedIn"] = true;
