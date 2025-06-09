@@ -1,12 +1,18 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 require_once('database.php');
 
-if ($db) {
-    echo "DB connection successful!";
+$username = 'admin';
+
+$query = 'SELECT password FROM users WHERE userName = :username';
+$stmt = $pdo->prepare($query);
+$stmt->bindValue(':username', $username);
+$stmt->execute();
+
+$user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if ($user) {
+    echo "User found: " . htmlspecialchars($username) . "<br>";
+    echo "Password hash: " . htmlspecialchars($user['password']) . "<br>";
 } else {
-    echo "DB connection failed!";
+    echo "No user found with username: " . htmlspecialchars($username);
 }
