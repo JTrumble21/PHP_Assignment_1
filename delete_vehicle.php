@@ -9,7 +9,7 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
 
 $id = (int)$_GET['id'];
 
-// Fetch vehicle to delete image if it exists
+
 $query = "SELECT image_path FROM cars WHERE id = :id";
 $stmt = $db->prepare($query);
 $stmt->bindValue(':id', $id, PDO::PARAM_INT);
