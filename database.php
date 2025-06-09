@@ -1,7 +1,7 @@
 <?php
 $dsn = 'mysql:host=localhost;dbname=car_inventory_manager;charset=utf8mb4';
-$username = 'admin';
-$password = 'inventory';
+$username = 'root';    // usually 'root' for XAMPP, NOT 'admin'
+$password = '';        // usually blank for 'root' on local XAMPP
 
 try {
     $db = new PDO($dsn, $username, $password);
