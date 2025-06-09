@@ -14,7 +14,7 @@ if (!isset($_SESSION["isLoggedIn"])) {
 </head>
 <body>
     <main>
-        <h2>Welcome, <?= htmlspecialchars($_SESSION["userName"]) ?>!</h2>
+        <h2>Welcome, <?= htmlspecialchars($_SESSION["user_name"]) ?>!</h2>
         <p><a href="index.php">Go to Inventory</a></p>
     </main>
 </body>
