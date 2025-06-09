@@ -12,7 +12,7 @@ if (!$id) {
     exit;
 }
 
-// Fetch existing vehicle
+
 $query = "SELECT * FROM cars WHERE id = :id";
 $statement = $db->prepare($query);
 $statement->bindValue(':id', $id, PDO::PARAM_INT);
@@ -50,10 +50,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if (move_uploaded_file($tmpName, $destination)) {
             // Delete old image
-            if (!empty($vehicle['image_path']) && file_exists($vehicle['image_path'])) {
-                unlink($vehicle['image_path']);
+            $oldPath = __DIR__ . '/' . $vehicle['image_path'];
+            if (!empty($vehicle['image_path']) && file_exists($oldPath)) {
+                unlink($oldPath);
             }
-            $imagePath = $destination;
+            $imagePath = $uploadDir . $newFileName;
         }
     }
 
@@ -96,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       <label><input type="number" name="price" placeholder="Price" value="<?= htmlspecialchars($vehicle['price']) ?>" required></label><br>
 
       <?php if ($vehicle['image_path']): ?>
-        <img src="<?= htmlspecialchars($vehicle['image_path']) ?>" alt="Vehicle Image" class="thumbnail" style="max-width: 200px;"><br>
+        <img src="/PHP_Assignment_1/<?= htmlspecialchars($vehicle['image_path']) ?>" alt="Vehicle Image" class="thumbnail" style="max-width: 200px;"><br>
       <?php endif; ?>
 
       <label><input type="file" name="vehicle_image" accept="image/*"></label><br>
