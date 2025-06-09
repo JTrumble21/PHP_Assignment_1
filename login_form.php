@@ -16,7 +16,7 @@ unset($_SESSION['login_error']);
         <?php if ($error): ?>
             <p class="error"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
-        <form action="login_process.php" method="POST">
+        <form action="login.php" method="POST">
             <label>Username: <input type="text" name="user_name" required></label><br>
             <label>Password: <input type="password" name="password" required></label><br>
             <input type="submit" value="Login">
