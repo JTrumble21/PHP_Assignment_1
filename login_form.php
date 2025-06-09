@@ -1,35 +1,26 @@
 <?php
 session_start();
+$error = $_SESSION['login_error'] ?? '';
+unset($_SESSION['login_error']);
 ?>
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Car Inventory Manager - Login</title>
+    <title>Login</title>
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-
-<div class="login-form">
-    <h2>Login</h2>
-    
-    <?php if (isset($_SESSION['login_error'])): ?>
-        <p class="error"><?= htmlspecialchars($_SESSION['login_error']) ?></p>
-        <?php unset($_SESSION['login_error']); ?>
-    <?php endif; ?>
-
-    <form action="login.php" method="post">
-        <label for="user_name">Username:</label>
-        <input type="text" name="user_name" id="user_name" required>
-
-        <label for="password">Password:</label>
-        <input type="password" name="password" id="password" required>
-
-        <input type="submit" value="Login">
-    </form>
-</div>
-
+    <main>
+        <h2>Login</h2>
+        <?php if ($error): ?>
+            <p class="error"><?= htmlspecialchars($error) ?></p>
+        <?php endif; ?>
+        <form action="login_process.php" method="POST">
+            <label>Username: <input type="text" name="user_name" required></label><br>
+            <label>Password: <input type="password" name="password" required></label><br>
+            <input type="submit" value="Login">
+        </form>
+    </main>
 </body>
 </html>
-

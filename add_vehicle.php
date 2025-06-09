@@ -1,7 +1,9 @@
 <?php
-require_once 'database.php';
-require_once 'image_util.php';
+session_start();
+require_once('database.php');
+require_once('image_util.php');
 
+// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $year = $_POST['year'];
     $make = $_POST['make'];
@@ -9,49 +11,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $trim = $_POST['trim'];
     $color = $_POST['color'];
     $price = $_POST['price'];
-    $image_path = null;
+    $imagePath = null;
 
     if (isset($_FILES['vehicle_image']) && $_FILES['vehicle_image']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = 'assets/images/';
-        if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 0755, true);
+        $uploadDir = 'assets/images/';
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
         }
 
-        $tmp = $_FILES['vehicle_image']['tmp_name'];
-        $ext = pathinfo($_FILES['vehicle_image']['name'], PATHINFO_EXTENSION);
-        $filename = uniqid('car_') . '.' . $ext;
-        $path = $upload_dir . $filename;
+        $tmpName = $_FILES['vehicle_image']['tmp_name'];
+        $originalName = basename($_FILES['vehicle_image']['name']);
+        $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
+        $newFileName = uniqid('car_', true) . '.' . $ext;
+        $destination = $uploadDir . $newFileName;
 
-        if (move_uploaded_file($tmp, $path)) {
-            process_image($upload_dir, $filename);
-            $image_path = $upload_dir . pathinfo($filename, PATHINFO_FILENAME) . '_100.' . $ext;
+        if (move_uploaded_file($tmpName, $destination)) {
+            process_image($uploadDir, $newFileName); // Optional: create resized versions
+            $imagePath = $destination;
         }
     }
 
-    $stmt = $db->prepare("INSERT INTO cars (year, make, model, trim, color, price, image_path)
-                          VALUES (:year, :make, :model, :trim, :color, :price, :image)");
-    $stmt->execute([
-        ':year' => $year,
-        ':make' => $make,
-        ':model' => $model,
-        ':trim' => $trim,
-        ':color' => $color,
-        ':price' => $price,
-        ':image' => $image_path
-    ]);
+    $query = "INSERT INTO cars (year, make, model, trim, color, price, image_path)
+              VALUES (:year, :make, :model, :trim, :color, :price, :image_path)";
+    $stmt = $db->prepare($query);
+    $stmt->bindValue(':year', $year);
+    $stmt->bindValue(':make', $make);
+    $stmt->bindValue(':model', $model);
+    $stmt->bindValue(':trim', $trim);
+    $stmt->bindValue(':color', $color);
+    $stmt->bindValue(':price', $price);
+    $stmt->bindValue(':image_path', $imagePath);
+    $stmt->execute();
+    $stmt->closeCursor();
 
-    header("Location: index.php");
-    exit;
+    header('Location: index.php');
+    exit();
 }
 ?>
-
-<form action="add_vehicle.php" method="POST" enctype="multipart/form-data">
-    <label>Year: <input type="number" name="year" required></label><br>
-    <label>Make: <input type="text" name="make" required></label><br>
-    <label>Model: <input type="text" name="model" required></label><br>
-    <label>Trim: <input type="text" name="trim"></label><br>
-    <label>Color: <input type="text" name="color"></label><br>
-    <label>Price: <input type="number" name="price" required step="0.01"></label><br>
-    <label>Image: <input type="file" name="vehicle_image" accept="image/*"></label><br>
-    <button type="submit">Add Vehicle</button>
-</form>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Vehicle</title>
+  <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+  <main>
+    <h2>Add New Vehicle</h2>
+    <form action="add_vehicle.php" method="post" enctype="multipart/form-data">
+      <label>Year: <input type="number" name="year" required></label>
+      <label>Make: <input type="text" name="make" required></label>
+      <label>Model: <input type="text" name="model" required></label>
+      <label>Trim: <input type="text" name="trim"></label>
+      <label>Color: <input type="text" name="color"></label>
+      <label>Price: <input type="number" name="price" required></label>
+      <label>Image: <input type="file" name="vehicle_image" accept="image/*"></label>
+      <input type="submit" value="Add Vehicle">
+    </form>
+    <p><a href="index.php">&larr; Back to Inventory</a></p>
+  </main>
+</body>
+</html>
