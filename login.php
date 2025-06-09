@@ -1,46 +1,32 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
 session_start();
 
 $username = filter_input(INPUT_POST, 'username');
 $password = filter_input(INPUT_POST, 'password');
 
-require_once('database.php');  // Make sure this sets $pdo!
+require_once('database.php'); // $pdo will be available here
 
-echo "POST Data: " . print_r($_POST, true) . "<br>";
-echo "Username variable: '" . htmlspecialchars($username) . "'<br>";
-echo "Password variable: '" . htmlspecialchars($password) . "'<br>";
+$query = 'SELECT password FROM users WHERE userName = :username';
+$statement = $pdo->prepare($query);
+$statement->bindValue(':username', $username);
+$statement->execute();
 
-try {
-    $query = 'SELECT password FROM users WHERE userName = :username';
-    $statement = $pdo->prepare($query);
-    $statement->bindValue(':username', $username);
-    $statement->execute();
+$row = $statement->fetch(PDO::FETCH_ASSOC);
 
-    $row = $statement->fetch(PDO::FETCH_ASSOC);
-
-    if ($row) {
-        $hash = $row['password'];
-        echo "Password hash from DB: $hash<br>";
-
-        if (password_verify($password, $hash)) {
-            echo "✅ Password verified successfully!<br>";
-
-            $_SESSION["isLoggedIn"] = true;
-            $_SESSION["username"] = $username;
-
-            header("Location: login_confirmation.php");
-            exit;
-        } else {
-            echo "❌ Password did NOT verify.<br>";
-        }
+if ($row) {
+    $hash = $row['password'];
+    if (password_verify($password, $hash)) {
+        $_SESSION["isLoggedIn"] = true;
+        $_SESSION["username"] = $username;
+        header("Location: login_confirmation.php");
+        exit;
     } else {
-        echo "❌ No user found with that username.<br>";
+        $_SESSION['login_error'] = 'Incorrect password.';
     }
-} catch (PDOException $e) {
-    echo "Database error: " . htmlspecialchars($e->getMessage());
+} else {
+    $_SESSION['login_error'] = 'No user found with that username.';
 }
+
+header("Location: login_form.php");
+exit;
 ?>
