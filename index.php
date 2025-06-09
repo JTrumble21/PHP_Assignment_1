@@ -68,10 +68,7 @@ try {
                 <?php foreach ($cars as $car): ?>
                     <tr>
                         <td>
-                            <?php if (!empty($car['image_path'])): ?>
-                                <!-- Debug line: show image path -->
-                                <p>DEBUG Image path: <?= htmlspecialchars($car['image_path']) ?></p>
-                                
+                            <?php if (!empty($car['image_path'])):
                             <img src="<?= htmlspecialchars($car['image_path']) ?>" alt="Vehicle Image" class="thumbnail" />
                             <?php else: ?>
                                 <span>Image coming soon!</span>
