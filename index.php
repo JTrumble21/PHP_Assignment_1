@@ -71,7 +71,7 @@ try {
                                 <!-- Debug line: show image path -->
                                 <p>DEBUG Image path: <?= htmlspecialchars($car['image_path']) ?></p>
                                 
-                             <img src="/PHP_Assignment_1/<?= htmlspecialchars($car['image_path']) ?>" alt="Vehicle Image" class="thumbnail" />
+                            <img src="<?= htmlspecialchars($car['image_path']) ?>" alt="Vehicle Image" class="thumbnail" />
                             <?php else: ?>
                                 <span>Image coming soon!</span>
                             <?php endif; ?>

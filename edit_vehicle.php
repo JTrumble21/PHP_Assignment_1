@@ -1,31 +1,27 @@
 <?php
 ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
 require("database.php");
 
 $id = $_GET['id'] ?? null;
-
 if (!$id) {
     echo "Invalid vehicle ID.";
     exit;
 }
 
-
-$query = "SELECT * FROM cars WHERE id = :id";
-$statement = $db->prepare($query);
-$statement->bindValue(':id', $id, PDO::PARAM_INT);
-$statement->execute();
-$vehicle = $statement->fetch();
-$statement->closeCursor();
+// Fetch vehicle
+$stmt = $db->prepare("SELECT * FROM cars WHERE id = :id");
+$stmt->bindValue(':id', $id, PDO::PARAM_INT);
+$stmt->execute();
+$vehicle = $stmt->fetch();
+$stmt->closeCursor();
 
 if (!$vehicle) {
     echo "Vehicle not found.";
     exit;
 }
 
-// Handle form submission
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $year = $_POST['year'];
     $make = $_POST['make'];
@@ -33,45 +29,40 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $trim = $_POST['trim'];
     $color = $_POST['color'];
     $price = $_POST['price'];
-    $imagePath = $vehicle['image_path']; // default to existing image
+    $imagePath = $vehicle['image_path'];
 
-    // Handle file upload
-    if (isset($_FILES['vehicle_image']) && $_FILES['vehicle_image']['error'] === UPLOAD_ERR_OK) {
+    // Handle image upload
+    if (!empty($_FILES['vehicle_image']['name'])) {
         $uploadDir = 'assets/images/';
+        $fileName = uniqid('car_', true) . '.' . pathinfo($_FILES['vehicle_image']['name'], PATHINFO_EXTENSION);
+        $relativePath = $uploadDir . $fileName;
+        $fullPath = __DIR__ . '/' . $relativePath;
+
         if (!is_dir($uploadDir)) {
             mkdir($uploadDir, 0755, true);
         }
 
-        $tmpName = $_FILES['vehicle_image']['tmp_name'];
-        $originalName = basename($_FILES['vehicle_image']['name']);
-        $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
-        $newFileName = uniqid('car_', true) . '.' . $ext;
-        $destination = $uploadDir . $newFileName;
-
-        if (move_uploaded_file($tmpName, $destination)) {
+        if (move_uploaded_file($_FILES['vehicle_image']['tmp_name'], $fullPath)) {
             // Delete old image
-            $oldPath = __DIR__ . '/' . $vehicle['image_path'];
-            if (!empty($vehicle['image_path']) && file_exists($oldPath)) {
-                unlink($oldPath);
+            if (!empty($vehicle['image_path']) && file_exists(__DIR__ . '/' . $vehicle['image_path'])) {
+                unlink(__DIR__ . '/' . $vehicle['image_path']);
             }
-            $imagePath = $uploadDir . $newFileName;
+            $imagePath = $relativePath;
         }
     }
 
-    // Update query
-    $updateQuery = "UPDATE cars SET year = :year, make = :make, model = :model, trim = :trim,
-                    color = :color, price = :price, image_path = :image_path WHERE id = :id";
-    $updateStmt = $db->prepare($updateQuery);
-    $updateStmt->bindValue(':year', $year);
-    $updateStmt->bindValue(':make', $make);
-    $updateStmt->bindValue(':model', $model);
-    $updateStmt->bindValue(':trim', $trim);
-    $updateStmt->bindValue(':color', $color);
-    $updateStmt->bindValue(':price', $price);
-    $updateStmt->bindValue(':image_path', $imagePath);
-    $updateStmt->bindValue(':id', $id, PDO::PARAM_INT);
-    $updateStmt->execute();
-    $updateStmt->closeCursor();
+    $update = $db->prepare("UPDATE cars SET year=:year, make=:make, model=:model, trim=:trim,
+        color=:color, price=:price, image_path=:image_path WHERE id=:id");
+    $update->execute([
+        ':year' => $year,
+        ':make' => $make,
+        ':model' => $model,
+        ':trim' => $trim,
+        ':color' => $color,
+        ':price' => $price,
+        ':image_path' => $imagePath,
+        ':id' => $id
+    ]);
 
     header("Location: index.php");
     exit();
@@ -79,31 +70,31 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <title>Edit Vehicle</title>
-  <link rel="stylesheet" href="css/main.css" />
+    <meta charset="UTF-8">
+    <title>Edit Vehicle</title>
+    <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-  <main>
-    <h2>Edit Vehicle</h2>
-    <form action="edit_vehicle.php?id=<?= htmlspecialchars($id) ?>" method="post" enctype="multipart/form-data">
-      <label><input type="number" name="year" placeholder="Year" value="<?= htmlspecialchars($vehicle['year']) ?>" required></label><br>
-      <label><input type="text" name="make" placeholder="Make" value="<?= htmlspecialchars($vehicle['make']) ?>" required></label><br>
-      <label><input type="text" name="model" placeholder="Model" value="<?= htmlspecialchars($vehicle['model']) ?>" required></label><br>
-      <label><input type="text" name="trim" placeholder="Trim" value="<?= htmlspecialchars($vehicle['trim']) ?>"></label><br>
-      <label><input type="text" name="color" placeholder="Color" value="<?= htmlspecialchars($vehicle['color']) ?>"></label><br>
-      <label><input type="number" name="price" placeholder="Price" value="<?= htmlspecialchars($vehicle['price']) ?>" required></label><br>
+    <main>
+        <h2>Edit Vehicle</h2>
+        <form action="edit_vehicle.php?id=<?= htmlspecialchars($id) ?>" method="post" enctype="multipart/form-data">
+            <input type="number" name="year" value="<?= htmlspecialchars($vehicle['year']) ?>" required><br>
+            <input type="text" name="make" value="<?= htmlspecialchars($vehicle['make']) ?>" required><br>
+            <input type="text" name="model" value="<?= htmlspecialchars($vehicle['model']) ?>" required><br>
+            <input type="text" name="trim" value="<?= htmlspecialchars($vehicle['trim']) ?>"><br>
+            <input type="text" name="color" value="<?= htmlspecialchars($vehicle['color']) ?>"><br>
+            <input type="number" name="price" value="<?= htmlspecialchars($vehicle['price']) ?>" required><br>
 
-      <?php if ($vehicle['image_path']): ?>
-        <img src="/PHP_Assignment_1/<?= htmlspecialchars($vehicle['image_path']) ?>" alt="Vehicle Image" class="thumbnail" style="max-width: 200px;"><br>
-      <?php endif; ?>
+            <?php if ($vehicle['image_path']): ?>
+                <img src="<?= htmlspecialchars($vehicle['image_path']) ?>" alt="Car Image" style="max-width:200px;"><br>
+            <?php endif; ?>
 
-      <label><input type="file" name="vehicle_image" accept="image/*"></label><br>
-      <input type="submit" value="Update Vehicle">
-    </form>
-    <p><a href="index.php">← Back to Inventory</a></p>
-  </main>
+            <input type="file" name="vehicle_image" accept="image/*"><br>
+            <input type="submit" value="Update Vehicle">
+        </form>
+        <p><a href="index.php">← Back</a></p>
+    </main>
 </body>
 </html>
