@@ -8,33 +8,39 @@ session_start();
 $username = filter_input(INPUT_POST, 'username');
 $password = filter_input(INPUT_POST, 'password');
 
-require_once('database.php'); 
+require_once('database.php');  // Make sure this sets $pdo!
 
-$db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+echo "POST Data: " . print_r($_POST, true) . "<br>";
+echo "Username variable: '" . htmlspecialchars($username) . "'<br>";
+echo "Password variable: '" . htmlspecialchars($password) . "'<br>";
 
-$query = 'SELECT password FROM users WHERE userName = :username';  // <-- here is the fix
-$statement = $db->prepare($query);
-$statement->bindValue(':username', $username);
-$statement->execute();
+try {
+    $query = 'SELECT password FROM users WHERE userName = :username';
+    $statement = $pdo->prepare($query);
+    $statement->bindValue(':username', $username);
+    $statement->execute();
 
-$row = $statement->fetch(PDO::FETCH_ASSOC);
+    $row = $statement->fetch(PDO::FETCH_ASSOC);
 
-if ($row) {
-    $hash = $row['password'];
+    if ($row) {
+        $hash = $row['password'];
+        echo "Password hash from DB: $hash<br>";
 
-    if (password_verify($password, $hash)) {
-        $_SESSION["isLoggedIn"] = true;
-        $_SESSION["username"] = $username;
+        if (password_verify($password, $hash)) {
+            echo "✅ Password verified successfully!<br>";
 
-        header("Location: login_confirmation.php");
-        exit;
+            $_SESSION["isLoggedIn"] = true;
+            $_SESSION["username"] = $username;
+
+            header("Location: login_confirmation.php");
+            exit;
+        } else {
+            echo "❌ Password did NOT verify.<br>";
+        }
     } else {
-        $_SESSION['login_error'] = 'Incorrect password.';
+        echo "❌ No user found with that username.<br>";
     }
-} else {
-    $_SESSION['login_error'] = 'No user found with that username.';
+} catch (PDOException $e) {
+    echo "Database error: " . htmlspecialchars($e->getMessage());
 }
-
-header("Location: login_form.php");
-exit;
 ?>
