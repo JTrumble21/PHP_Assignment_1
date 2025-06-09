@@ -4,10 +4,10 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-require_once('database.php');
+require_once('database.php');  // Ensure this path is correct!
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
+    $username = trim($_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
 
     if (!$username || !$password) {
@@ -25,7 +25,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($user) {
         if (password_verify($password, $user['password'])) {
-            // Password matches, log the user in
             $_SESSION['isLoggedIn'] = true;
             $_SESSION['username'] = $username;
             header('Location: login_confirmation.php');
@@ -40,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Location: login_form.php');
     exit;
 } else {
-    // If the page is accessed directly without POST, redirect to login form
     header('Location: login_form.php');
     exit;
 }
