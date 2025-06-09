@@ -15,6 +15,7 @@ $cars = $db->query("SELECT * FROM cars ORDER BY year DESC")->fetchAll();
   <header>
     <h2>Car Inventory</h2>
     <a class="add-vehicle" href="add_vehicle.php">Add New Car</a>
+    <a href="logout.php" class="logout-button">Logout</a> <!-- Moved here -->
   </header>
   <main>
     <table>
@@ -41,7 +42,6 @@ $cars = $db->query("SELECT * FROM cars ORDER BY year DESC")->fetchAll();
             <a href="delete_vehicle.php?id=<?= $car['id'] ?>" onclick="return confirm('Delete this vehicle?')">Delete</a>
           </td>
         </tr>
-        <a href="logout.php" class="logout-button">Logout</a>
       <?php endforeach; ?>
     </table>
   </main>
