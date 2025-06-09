@@ -6,9 +6,8 @@ $password = filter_input(INPUT_POST, 'password');
 
 require_once('database.php'); 
 
-
 $query = 'SELECT password_hash FROM users WHERE username = :username';
-$statement = $pdo->prepare($query);
+$statement = $db->prepare($query);
 $statement->bindValue(':username', $user_name);
 $statement->execute();
 
