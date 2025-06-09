@@ -34,9 +34,10 @@ try {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Dealership Inventory System</title>
-    <link rel="stylesheet" href="css/main.css">
+  <meta charset="UTF-8" />
+  <base href="/PHP_Assignment_1/">
+  <title>Edit Vehicle</title>
+  <link rel="stylesheet" href="css/main.css" />
 </head>
 <body>
 <header>

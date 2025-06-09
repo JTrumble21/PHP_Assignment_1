@@ -72,10 +72,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Edit Vehicle</title>
-    <link rel="stylesheet" href="css/main.css">
+  <meta charset="UTF-8" />
+  <base href="/PHP_Assignment_1/">
+  <title>Edit Vehicle</title>
+  <link rel="stylesheet" href="css/main.css" />
 </head>
+
 <body>
     <main>
         <h2>Edit Vehicle</h2>
