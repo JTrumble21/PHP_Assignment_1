@@ -5,18 +5,18 @@ error_reporting(E_ALL);
 
 session_start();
 
-$user_name = filter_input(INPUT_POST, 'user_name');
+$user_name = filter_input(INPUT_POST, 'username');
 $password = filter_input(INPUT_POST, 'password');
 
 require_once('database.php'); 
 
-echo "Username received: " . htmlspecialchars($user_name) . "<br>";
+echo "Username received: " . htmlspecialchars($username) . "<br>";
 echo "Password received: " . htmlspecialchars($password) . "<br>";
 
 // Look up the user
 $query = 'SELECT password FROM users WHERE username = :username';
 $statement = $db->prepare($query);
-$statement->bindValue(':username', $user_name);
+$statement->bindValue(':username', $username);
 $statement->execute();
 
 $row = $statement->fetch();
@@ -30,7 +30,7 @@ if ($row) {
         echo "✅ Password verified successfully!<br>";
 
         $_SESSION["isLoggedIn"] = true;
-        $_SESSION["username"] = $user_name;
+        $_SESSION["username"] = $username;
 
         echo "Redirecting to login_confirmation.php...<br>";
         header("Location: login_confirmation.php");
