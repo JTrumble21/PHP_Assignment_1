@@ -91,7 +91,7 @@ form input[type="submit"]:hover {
   font-style: italic;
 }
 
-/* Login form container */
+
 .login-form {
   width: 320px;
   margin: 80px auto;
@@ -99,3 +99,10 @@ form input[type="submit"]:hover {
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0,); }
+
+  .error {
+  color: red;
+  font-weight: bold;
+  margin-bottom: 15px;
+  text-align: center;
+  }
