@@ -39,6 +39,7 @@ $cars = $db->query("SELECT * FROM cars ORDER BY year DESC")->fetchAll();
           <td>
             <a href="edit_vehicle.php?id=<?= $car['id'] ?>">Edit</a> |
             <a href="delete_vehicle.php?id=<?= $car['id'] ?>" onclick="return confirm('Delete this vehicle?')">Delete</a>
+            <a href="logout.php" class="logout-button">Logout</a>
           </td>
         </tr>
       <?php endforeach; ?>
