@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 
 session_start();
 
-$user_name = filter_input(INPUT_POST, 'username');
+$user_name = filter_input(INPUT_POST, 'user_name');
 $password = filter_input(INPUT_POST, 'password');
 
 require_once('database.php'); 
