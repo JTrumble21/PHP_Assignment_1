@@ -4,7 +4,7 @@ session_start();
 $username = filter_input(INPUT_POST, 'username');
 $password = filter_input(INPUT_POST, 'password');
 
-require_once('database.php'); // $pdo will be available here
+require_once('database.php'); // loads $pdo
 
 $query = 'SELECT password FROM users WHERE userName = :username';
 $statement = $pdo->prepare($query);
