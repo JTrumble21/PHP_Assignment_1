@@ -1,15 +1,18 @@
 <?php
-
 require('database.php');
+require_once('image_util.php');
+
+define('UPLOAD_DIR', 'assets/images/');
+define('PLACEHOLDER_IMAGE', UPLOAD_DIR . 'placeholder_100.jpg');
 
 $id = $_GET['id'] ?? null;
 
-if (!$id) {
+if (!$id || !is_numeric($id)) {
     echo "Invalid vehicle ID.";
     exit;
 }
 
-// Fetch existing vehicle
+
 $query = "SELECT * FROM cars WHERE id = :id";
 $statement = $db->prepare($query);
 $statement->bindValue(':id', $id, PDO::PARAM_INT);
@@ -22,7 +25,6 @@ if (!$vehicle) {
     exit;
 }
 
-// Handle form submission
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $year = $_POST['year'];
     $make = $_POST['make'];
@@ -32,28 +34,42 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $price = $_POST['price'];
     $imagePath = $vehicle['image_path'];
 
+    
     if (isset($_FILES['vehicle_image']) && $_FILES['vehicle_image']['error'] === UPLOAD_ERR_OK) {
-        $uploadDir = 'assets/images/';
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0755, true);
+        if (!is_dir(UPLOAD_DIR)) {
+            mkdir(UPLOAD_DIR, 0755, true);
         }
 
         $tmpName = $_FILES['vehicle_image']['tmp_name'];
         $originalName = basename($_FILES['vehicle_image']['name']);
         $ext = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
-        $newFileName = uniqid('car_', true) . '.' . $ext;
-        $destination = $uploadDir . $newFileName;
+        $newBaseName = uniqid('car_', true);
+        $newFileName = $newBaseName . '.' . $ext;
+        $destination = UPLOAD_DIR . $newFileName;
 
         if (move_uploaded_file($tmpName, $destination)) {
-            if (!empty($vehicle['image_path']) && file_exists($vehicle['image_path'])) {
-                unlink($vehicle['image_path']);
+            // Remove old image only if it's not the placeholder
+            if (!empty($vehicle['image_path']) && $vehicle['image_path'] !== PLACEHOLDER_IMAGE) {
+                $base = pathinfo($vehicle['image_path'], PATHINFO_FILENAME);
+                $ext = pathinfo($vehicle['image_path'], PATHINFO_EXTENSION);
+                $fullBasePath = UPLOAD_DIR . $base;
+
+                @unlink($fullBasePath . '.' . $ext);            
+                @unlink($fullBasePath . '_100.' . $ext);         
+                @unlink($fullBasePath . '_400.' . $ext);         
             }
-            $imagePath = $destination;
+
+            
+            process_image(UPLOAD_DIR, $newFileName);
+            $imagePath = UPLOAD_DIR . $newBaseName . '_100.' . $ext;
         }
     }
 
-    $updateQuery = "UPDATE cars SET year = :year, make = :make, model = :model, trim = :trim,
-                    color = :color, price = :price, image_path = :image_path WHERE id = :id";
+    
+    $updateQuery = "UPDATE cars 
+                    SET year = :year, make = :make, model = :model, trim = :trim,
+                        color = :color, price = :price, image_path = :image_path 
+                    WHERE id = :id";
     $updateStmt = $db->prepare($updateQuery);
     $updateStmt->bindValue(':year', $year);
     $updateStmt->bindValue(':make', $make);
@@ -106,18 +122,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       <input type="number" name="price" value="<?= htmlspecialchars($vehicle['price']) ?>" required>
     </label>
 
-    <?php if (!empty($vehicle['image_path']) && file_exists($vehicle['image_path'])): ?>
-      <label>Current Image:</label><br>
-      <img src="<?= htmlspecialchars($vehicle['image_path']) ?>" class="thumbnail" alt="Vehicle Image"><br>
-    <?php endif; ?>
-
-    <label>Replace Image:
-      <input type="file" name="vehicle_image" accept="image/*">
-    </label>
-
-    <input type="submit" value="Update Vehicle">
-  </form>
-  <p><a href="index.php">← Back to Inventory</a></p>
-</main>
-</body>
-</html>
+    <?php
+    $imgSrc = (!empty($vehicle['image_path']) && file_exists($vehicle['image_path'])) ? $vehicle['image_path'] : PLACEHOLDER_IMAGE;
+    ?>
+    <label>Current
