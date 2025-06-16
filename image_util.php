@@ -1,8 +1,6 @@
 <?php
 function process_image($dir, $filename) {
-   
     $dir = rtrim($dir, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
-
     $i = strrpos($filename, '.');
     $image_name = substr($filename, 0, $i);
     $ext = substr($filename, $i);
@@ -11,8 +9,13 @@ function process_image($dir, $filename) {
     $image_path_400 = $dir . $image_name . '_400' . $ext;
     $image_path_100 = $dir . $image_name . '_100' . $ext;
 
-    resize_image($image_path, $image_path_400, 400, 300);
-    resize_image($image_path, $image_path_100, 100, 100);
+    echo "Original: " . realpath($image_path) . "\n";
+    if (resize_image($image_path, $image_path_400, 400, 300)) {
+        echo "Saved resized 400px image to: $image_path_400\n";
+    }
+    if (resize_image($image_path, $image_path_100, 100, 100)) {
+        echo "Saved resized 100px image to: $image_path_100\n";
+    }
 }
 
 function resize_image($old_image_path, $new_image_path, $max_width, $max_height) {
