@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require 'database.php';
 require 'image_util.php';
 
@@ -11,14 +15,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $price = filter_input(INPUT_POST, 'price', FILTER_VALIDATE_FLOAT);
     $image = $_FILES['image'] ?? null;
 
-    $base_dir = 'assets/images/';
+    
+    $base_dir = __DIR__ . '/assets/images/';
+    
+    $image_web_path = 'assets/images/';
+
     $image_name = '';
 
     if ($image && $image['error'] === UPLOAD_ERR_OK) {
         $original_filename = basename($image['name']);
         $ext = strtolower(pathinfo($original_filename, PATHINFO_EXTENSION));
 
-      
         $allowed = ['jpg', 'jpeg', 'png', 'gif'];
         if (in_array($ext, $allowed)) {
             $unique_filename = uniqid() . '_' . $original_filename;
@@ -33,12 +40,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     }
 
-    
     if (!$image_name) {
         $image_name = 'placeholder_100.jpg';
     }
 
-    
+    $image_path_for_db = $image_web_path . $image_name;
+
     $query = 'INSERT INTO cars (year, make, model, trim, color, price, image_path)
               VALUES (:year, :make, :model, :trim, :color, :price, :image_path)';
     $stmt = $db->prepare($query);
@@ -48,11 +55,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bindValue(':trim', $trim);
     $stmt->bindValue(':color', $color);
     $stmt->bindValue(':price', $price);
-    $stmt->bindValue(':image_path', $base_dir . $image_name);
+    $stmt->bindValue(':image_path', $image_path_for_db);
     $stmt->execute();
     $stmt->closeCursor();
 
     header("Location: index.php");
     exit();
 }
-?>
