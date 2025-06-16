@@ -1,7 +1,7 @@
 <?php
 require 'image_util.php';
 
-$base_dir = 'images/';
+$base_dir = 'assets/images/';
 $placeholder = 'placeholder.jpg';
 
 if (!file_exists($base_dir . $placeholder)) {
