@@ -12,7 +12,6 @@ if (!$id || !is_numeric($id)) {
     exit;
 }
 
-
 $query = "SELECT * FROM cars WHERE id = :id";
 $statement = $db->prepare($query);
 $statement->bindValue(':id', $id, PDO::PARAM_INT);
@@ -34,7 +33,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $price = $_POST['price'];
     $imagePath = $vehicle['image_path'];
 
-    
     if (isset($_FILES['vehicle_image']) && $_FILES['vehicle_image']['error'] === UPLOAD_ERR_OK) {
         if (!is_dir(UPLOAD_DIR)) {
             mkdir(UPLOAD_DIR, 0755, true);
@@ -51,21 +49,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             // Remove old image only if it's not the placeholder
             if (!empty($vehicle['image_path']) && $vehicle['image_path'] !== PLACEHOLDER_IMAGE) {
                 $base = pathinfo($vehicle['image_path'], PATHINFO_FILENAME);
-                $ext = pathinfo($vehicle['image_path'], PATHINFO_EXTENSION);
+                $extOld = pathinfo($vehicle['image_path'], PATHINFO_EXTENSION);
                 $fullBasePath = UPLOAD_DIR . $base;
 
-                @unlink($fullBasePath . '.' . $ext);            
-                @unlink($fullBasePath . '_100.' . $ext);         
-                @unlink($fullBasePath . '_400.' . $ext);         
+                @unlink($fullBasePath . '.' . $extOld);
+                @unlink($fullBasePath . '_100.' . $extOld);
+                @unlink($fullBasePath . '_400.' . $extOld);
             }
 
-            
             process_image(UPLOAD_DIR, $newFileName);
             $imagePath = UPLOAD_DIR . $newBaseName . '_100.' . $ext;
         }
     }
 
-    
     $updateQuery = "UPDATE cars 
                     SET year = :year, make = :make, model = :model, trim = :trim,
                         color = :color, price = :price, image_path = :image_path 
@@ -100,29 +96,41 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   <form action="edit_vehicle.php?id=<?= htmlspecialchars($id) ?>" method="post" enctype="multipart/form-data">
     <label>Year:
       <input type="number" name="year" value="<?= htmlspecialchars($vehicle['year']) ?>" required>
-    </label>
+    </label><br>
 
     <label>Make:
       <input type="text" name="make" value="<?= htmlspecialchars($vehicle['make']) ?>" required>
-    </label>
+    </label><br>
 
     <label>Model:
       <input type="text" name="model" value="<?= htmlspecialchars($vehicle['model']) ?>" required>
-    </label>
+    </label><br>
 
     <label>Trim:
       <input type="text" name="trim" value="<?= htmlspecialchars($vehicle['trim']) ?>">
-    </label>
+    </label><br>
 
     <label>Color:
       <input type="text" name="color" value="<?= htmlspecialchars($vehicle['color']) ?>">
-    </label>
+    </label><br>
 
     <label>Price:
       <input type="number" name="price" value="<?= htmlspecialchars($vehicle['price']) ?>" required>
-    </label>
+    </label><br><br>
 
     <?php
     $imgSrc = (!empty($vehicle['image_path']) && file_exists($vehicle['image_path'])) ? $vehicle['image_path'] : PLACEHOLDER_IMAGE;
     ?>
-    <label>Current
+    <label>Current Image:</label><br>
+    <img src="<?= htmlspecialchars($imgSrc) ?>" class="thumbnail" alt="Vehicle Image"><br><br>
+
+    <label>Replace Image:
+      <input type="file" name="vehicle_image" accept="image/*">
+    </label><br><br>
+
+    <button type="submit">Update Vehicle</button>
+  </form>
+  <p><a href="index.php">← Back to Inventory</a></p>
+</main>
+</body>
+</html>
