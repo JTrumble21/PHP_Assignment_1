@@ -1,5 +1,4 @@
 <?php
-// index.php
 require 'database.php';
 $cars = $db->query("SELECT * FROM cars ORDER BY year DESC")->fetchAll();
 ?>
@@ -15,7 +14,7 @@ $cars = $db->query("SELECT * FROM cars ORDER BY year DESC")->fetchAll();
   <header>
     <h2>Car Inventory</h2>
     <a class="add-vehicle" href="add_vehicle.php">Add New Car</a>
-    <a href="logout.php" class="logout-button">Logout</a> <!-- Moved here -->
+    <a href="logout.php" class="logout-button">Logout</a>
   </header>
   <main>
     <table>
@@ -25,11 +24,7 @@ $cars = $db->query("SELECT * FROM cars ORDER BY year DESC")->fetchAll();
       <?php foreach ($cars as $car): ?>
         <tr>
           <td>
-            <?php if (!empty($car['image_path']) && file_exists($car['image_path'])): ?>
-              <img src="<?= htmlspecialchars($car['image_path']) ?>" class="thumbnail">
-            <?php else: ?>
-              <span class="no-image">No image</span>
-            <?php endif; ?>
+            <img src="<?= htmlspecialchars(file_exists($car['image_path']) ? $car['image_path'] : 'images/placeholder_100.jpg') ?>" class="thumbnail">
           </td>
           <td><?= htmlspecialchars($car['year']) ?></td>
           <td><?= htmlspecialchars($car['make']) ?></td>

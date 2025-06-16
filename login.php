@@ -1,7 +1,7 @@
 <?php
 session_start();
 
-require_once('database.php');  // Ensure this path is correct!
+require_once('database.php'); 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = trim($_POST['username'] ?? '');
