@@ -11,14 +11,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $price = filter_input(INPUT_POST, 'price', FILTER_VALIDATE_FLOAT);
     $image = $_FILES['image'] ?? null;
 
-    $base_dir = 'images/';
+    $base_dir = 'assets/images/';
     $image_name = '';
 
     if ($image && $image['error'] === UPLOAD_ERR_OK) {
         $original_filename = basename($image['name']);
         $ext = strtolower(pathinfo($original_filename, PATHINFO_EXTENSION));
 
-        // Validate allowed image extensions
+      
         $allowed = ['jpg', 'jpeg', 'png', 'gif'];
         if (in_array($ext, $allowed)) {
             $unique_filename = uniqid() . '_' . $original_filename;
