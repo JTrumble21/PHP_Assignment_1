@@ -3,7 +3,6 @@ require 'database.php';
 require_once 'image_util.php';
 
 define('UPLOAD_DIR', 'assets/images/');
-define('PLACEHOLDER_IMAGE', UPLOAD_DIR . 'placeholder_100.jpg');
 
 $id = $_GET['id'] ?? null;
 
@@ -12,7 +11,6 @@ if (!$id || !is_numeric($id)) {
     exit;
 }
 
-// Fetch vehicle from DB
 $query = "SELECT * FROM cars WHERE id = :id";
 $statement = $db->prepare($query);
 $statement->bindValue(':id', $id, PDO::PARAM_INT);
@@ -25,14 +23,10 @@ if (!$vehicle) {
     exit;
 }
 
-// Load sold vehicles list
 $soldCars = file_exists('sold_vehicles.php') ? include 'sold_vehicles.php' : [];
 $isSold = in_array($vehicle['id'], $soldCars);
 
-// Handle POST submissions
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-
-    // MARK AS SOLD
     if (isset($_POST['mark_sold'])) {
         if (!$isSold) {
             $soldCars[] = $vehicle['id'];
@@ -42,12 +36,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // UNMARK AS SOLD
     if (isset($_POST['unmark_sold'])) {
         if ($isSold) {
-            // Remove vehicle id from soldCars array
             $soldCars = array_filter($soldCars, fn($carId) => $carId !== $vehicle['id']);
-            // Reindex array
             $soldCars = array_values($soldCars);
             file_put_contents('sold_vehicles.php', "<?php\nreturn " . var_export($soldCars, true) . ";\n");
         }
@@ -55,7 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // UPDATE VEHICLE INFO
     $year = $_POST['year'] ?? '';
     $make = $_POST['make'] ?? '';
     $model = $_POST['model'] ?? '';
@@ -64,7 +54,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $price = $_POST['price'] ?? '';
     $imagePath = $vehicle['image_path'];
 
-    // Handle image upload if new image provided
     if (isset($_FILES['vehicle_image']) && $_FILES['vehicle_image']['error'] === UPLOAD_ERR_OK) {
         if (!is_dir(UPLOAD_DIR)) {
             mkdir(UPLOAD_DIR, 0755, true);
@@ -78,8 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $destination = UPLOAD_DIR . $newFileName;
 
         if (move_uploaded_file($tmpName, $destination)) {
-            // Remove old images if not placeholder
-            if (!empty($vehicle['image_path']) && $vehicle['image_path'] !== PLACEHOLDER_IMAGE) {
+            if (!empty($vehicle['image_path'])) {
                 $baseOld = pathinfo($vehicle['image_path'], PATHINFO_FILENAME);
                 $extOld = pathinfo($vehicle['image_path'], PATHINFO_EXTENSION);
 
@@ -93,7 +81,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Update database
     $updateQuery = "UPDATE cars 
                     SET year = :year, make = :make, model = :model, trim = :trim,
                         color = :color, price = :price, image_path = :image_path 
@@ -113,7 +100,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header("Location: index.php");
     exit;
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -157,12 +143,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <input type="number" step="0.01" name="price" value="<?= htmlspecialchars($vehicle['price']) ?>" required>
         </label><br><br>
 
-        <label>Current Image:</label><br>
-        <?php
-        $imgSrc = (!empty($vehicle['image_path']) && file_exists($vehicle['image_path'])) ? $vehicle['image_path'] : PLACEHOLDER_IMAGE;
-        ?>
-        <img src="<?= htmlspecialchars($imgSrc) ?>" alt="Vehicle Image"><br><br>
-
         <label>
             Replace Image:<br>
             <input type="file" name="vehicle_image" accept="image/*">
@@ -183,4 +163,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </main>
 </body>
 </html>
-
