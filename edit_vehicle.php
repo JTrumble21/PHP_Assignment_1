@@ -1,6 +1,6 @@
 <?php
-require('database.php');
-require_once('image_util.php');
+require 'database.php';
+require_once 'image_util.php';
 
 define('UPLOAD_DIR', 'assets/images/');
 define('PLACEHOLDER_IMAGE', UPLOAD_DIR . 'placeholder_100.jpg');
@@ -12,6 +12,7 @@ if (!$id || !is_numeric($id)) {
     exit;
 }
 
+// Fetch vehicle from DB
 $query = "SELECT * FROM cars WHERE id = :id";
 $statement = $db->prepare($query);
 $statement->bindValue(':id', $id, PDO::PARAM_INT);
@@ -24,7 +25,12 @@ if (!$vehicle) {
     exit;
 }
 
-if ($_SERVER["REQUEST_METHOD"] === "POST") {
+// Load sold vehicles list
+$soldCars = file_exists('sold_vehicles.php') ? include 'sold_vehicles.php' : [];
+$isSold = in_array($vehicle['id'], $soldCars);
+
+// Handle update form submission
+if ($_SERVER["REQUEST_METHOD"] === "POST" && !isset($_POST['mark_sold']) && !isset($_POST['unmark_sold'])) {
     $year = $_POST['year'];
     $make = $_POST['make'];
     $model = $_POST['model'];
@@ -46,15 +52,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $destination = UPLOAD_DIR . $newFileName;
 
         if (move_uploaded_file($tmpName, $destination)) {
-            // Remove old image only if it's not the placeholder
+            // Remove old image if not placeholder
             if (!empty($vehicle['image_path']) && $vehicle['image_path'] !== PLACEHOLDER_IMAGE) {
-                $base = pathinfo($vehicle['image_path'], PATHINFO_FILENAME);
-                $extOld = pathinfo($vehicle['image_path'], PATHINFO_EXTENSION);
-                $fullBasePath = UPLOAD_DIR . $base;
-
-                @unlink($fullBasePath . '.' . $extOld);
-                @unlink($fullBasePath . '_100.' . $extOld);
-                @unlink($fullBasePath . '_400.' . $extOld);
+                @unlink($vehicle['image_path']);
             }
 
             process_image(UPLOAD_DIR, $newFileName);
@@ -63,74 +63,3 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     $updateQuery = "UPDATE cars 
-                    SET year = :year, make = :make, model = :model, trim = :trim,
-                        color = :color, price = :price, image_path = :image_path 
-                    WHERE id = :id";
-    $updateStmt = $db->prepare($updateQuery);
-    $updateStmt->bindValue(':year', $year);
-    $updateStmt->bindValue(':make', $make);
-    $updateStmt->bindValue(':model', $model);
-    $updateStmt->bindValue(':trim', $trim);
-    $updateStmt->bindValue(':color', $color);
-    $updateStmt->bindValue(':price', $price);
-    $updateStmt->bindValue(':image_path', $imagePath);
-    $updateStmt->bindValue(':id', $id, PDO::PARAM_INT);
-    $updateStmt->execute();
-    $updateStmt->closeCursor();
-
-    header("Location: index.php");
-    exit();
-}
-?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Edit Vehicle</title>
-  <link rel="stylesheet" href="css/main.css" />
-</head>
-<body>
-<main>
-  <h2>Edit Vehicle</h2>
-  <form action="edit_vehicle.php?id=<?= htmlspecialchars($id) ?>" method="post" enctype="multipart/form-data">
-    <label>Year:
-      <input type="number" name="year" value="<?= htmlspecialchars($vehicle['year']) ?>" required>
-    </label><br>
-
-    <label>Make:
-      <input type="text" name="make" value="<?= htmlspecialchars($vehicle['make']) ?>" required>
-    </label><br>
-
-    <label>Model:
-      <input type="text" name="model" value="<?= htmlspecialchars($vehicle['model']) ?>" required>
-    </label><br>
-
-    <label>Trim:
-      <input type="text" name="trim" value="<?= htmlspecialchars($vehicle['trim']) ?>">
-    </label><br>
-
-    <label>Color:
-      <input type="text" name="color" value="<?= htmlspecialchars($vehicle['color']) ?>">
-    </label><br>
-
-    <label>Price:
-      <input type="number" name="price" value="<?= htmlspecialchars($vehicle['price']) ?>" required>
-    </label><br><br>
-
-    <?php
-    $imgSrc = (!empty($vehicle['image_path']) && file_exists($vehicle['image_path'])) ? $vehicle['image_path'] : PLACEHOLDER_IMAGE;
-    ?>
-    <label>Current Image:</label><br>
-    <img src="<?= htmlspecialchars($imgSrc) ?>" class="thumbnail" alt="Vehicle Image"><br><br>
-
-    <label>Replace Image:
-      <input type="file" name="vehicle_image" accept="image/*">
-    </label><br><br>
-
-    <button type="submit">Update Vehicle</button>
-  </form>
-  <p><a href="index.php">← Back to Inventory</a></p>
-</main>
-</body>
-</html>
