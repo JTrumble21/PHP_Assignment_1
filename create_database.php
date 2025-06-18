@@ -40,7 +40,7 @@ try {
         (2022, 'Dodge', 'Hornet', 'GT', 'Blue', 52000.00, 'assets/images/dodge_hornet.jpg'),
         (2024, 'Dodge', 'Charger', 'Daytona Scat Pack', 'Silver', 63000.00, 'assets/images/dodge_charger.jpg'),
         (2018, 'Honda', 'CRV', '', 'Silver', 30000.00, 'assets/images/honda_crv.jpg'),
-        (2014, 'Dodge', 'Avenger', 'SXT', 'Silver', 10000.00, 'assets/images/dodge_avenger.jpeg'),
+        (2014, 'Dodge', 'Avenger', 'SXT', 'Silver', 10000.00, 'assets/images/dodge_avenger.jpeg')
     ");
 
     echo "Database and table created successfully with image paths.";
