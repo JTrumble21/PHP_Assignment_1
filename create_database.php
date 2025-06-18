@@ -34,7 +34,7 @@ try {
         INSERT INTO cars (year, make, model, trim, color, price, image_path) VALUES
         (2019, 'Ford', 'Escape', 'Titanium', 'White', 21000.00, 'assets/images/ford_escape.jpeg'),
         (2022, 'Chevrolet', 'Malibu', 'LT', 'Black', 34000.00, 'assets/images/chevy_malibu.jpeg'),
-        (2023, 'Tesla', 'Model 3', 'Performance', 'Silver', 65000.00, 'assets/images/Tesla-Model-3.jpg'),
+        (2023, 'Tesla', 'Model 3', 'Performance', 'Silver', 65000.00, 'assets/images/Tesla-Model-3_100.jpg'),
         (2020, 'Chevrolet', 'Silverado', 'HD', 'White', 48000.00, 'assets/images/chevy_silverado.jpg'),
         (2024, 'Chevrolet', 'Onix', 'RS Hatchback', 'Red', 32000.00, 'assets/images/chevy_onix.jpg'),
         (2022, 'Dodge', 'Hornet', 'GT', 'Blue', 52000.00, 'assets/images/dodge_hornet.jpg'),
