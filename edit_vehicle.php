@@ -1,4 +1,13 @@
 <?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['mark_sold'])) {
+        error_log('Mark as sold pressed for vehicle id: ' . $id);
+    }
+    if (isset($_POST['unmark_sold'])) {
+        error_log('Unmark as sold pressed for vehicle id: ' . $id);
+    }
+}
+
 require 'database.php';
 require_once 'image_util.php';
 
