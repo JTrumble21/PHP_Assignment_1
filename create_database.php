@@ -39,7 +39,7 @@ try {
         (2024, 'Chevrolet', 'Onix', 'RS Hatchback', 'Red', 32000.00, 'assets/images/chevy_onix.jpg'),
         (2022, 'Dodge', 'Hornet', 'GT', 'Blue', 52000.00, 'assets/images/dodge_hornet.jpg'),
         (2024, 'Dodge', 'Charger', 'Daytona Scat Pack', 'Silver', 63000.00, 'assets/images/dodge_charger.jpg'),
-        (2018, 'Honda', 'CRV', '', 'Silver', 30000.00, 'assets/images/honda_crv.jpg')
+        (2018, 'Honda', 'CRV', '', 'Silver', 30000.00, 'assets/images/honda_crv.jpg'),
         (2014, 'Dodge', 'Avenger', 'SXT', 'Silver', 10000.00, 'assets/images/dodge avenger.jpeg'),
     ");
 
