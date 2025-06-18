@@ -32,14 +32,15 @@ try {
     // Insert seed data with image paths pointing to assets/images
     $pdo->exec("
         INSERT INTO cars (year, make, model, trim, color, price, image_path) VALUES
-        (2019, 'Ford', 'Escape', 'Titanium', 'White', 21000.00, 'assets/images/ford_escape.jpg'),
-        (2022, 'Chevrolet', 'Malibu', 'LT', 'Black', 34000.00, 'assets/images/chevy_malibu.jpg'),
-        (2023, 'Tesla', 'Model 3', 'Performance', 'Silver', 65000.00, 'assets/images/tesla_model3.jpg'),
+        (2019, 'Ford', 'Escape', 'Titanium', 'White', 21000.00, 'assets/images/ford escape.jpeg'),
+        (2022, 'Chevrolet', 'Malibu', 'LT', 'Black', 34000.00, 'assets/images/chevy malibu.jpeg'),
+        (2023, 'Tesla', 'Model 3', 'Performance', 'Silver', 65000.00, 'assets/images/Tesla-Mmodel-3.jpg'),
         (2020, 'Chevrolet', 'Silverado', 'HD', 'White', 48000.00, 'assets/images/chevy_silverado.jpg'),
         (2024, 'Chevrolet', 'Onix', 'RS Hatchback', 'Red', 32000.00, 'assets/images/chevy_onix.jpg'),
         (2022, 'Dodge', 'Hornet', 'GT', 'Blue', 52000.00, 'assets/images/dodge_hornet.jpg'),
         (2024, 'Dodge', 'Charger', 'Daytona Scat Pack', 'Silver', 63000.00, 'assets/images/dodge_charger.jpg'),
         (2018, 'Honda', 'CRV', '', 'Silver', 30000.00, 'assets/images/honda_crv.jpg')
+        (2014, 'Dodge', 'Avenger', 'SXT', 'Silver', 10000.00, 'assets/images/dodge avenger.jpeg'),
     ");
 
     echo "Database and table created successfully with image paths.";
