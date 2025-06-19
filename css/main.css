@@ -218,13 +218,6 @@ html, body {
     border-radius: 8px;
     box-shadow: 0 0 10px #0003;
 }
-main {
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 20px;
-    background-color: white;
-}
-
 form label {
     display: block;
     margin-bottom: 10px;
