@@ -3,25 +3,29 @@ $id = $_GET['id'] ?? null;
 $action = $_GET['action'] ?? null;
 
 if (!$id || !is_numeric($id) || !in_array($action, ['mark', 'unmark'])) {
-    header('Location: index.php');
+    echo "Invalid request.";
     exit;
 }
+
+// Set the confirmation message
+$confirmationText = $action === 'mark' ? 'Mark this vehicle as SOLD?' : 'Unmark this vehicle as SOLD?';
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Confirm <?= $action === 'mark' ? 'Mark as Sold' : 'Unmark as Sold' ?></title>
+    <title>Confirm <?= ucfirst($action) ?> as Sold</title>
 </head>
 <body>
     <h2>Confirm Action</h2>
-    <p>Are you sure you want to <?= $action === 'mark' ? '<strong>MARK</strong>' : '<strong>UNMARK</strong>' ?> this vehicle as sold?</p>
+    <p><?= $confirmationText ?></p>
+
     <form action="toggle_sold.php" method="post">
         <input type="hidden" name="car_id" value="<?= htmlspecialchars($id) ?>">
-        <input type="hidden" name="action" value="<?= $action ?>">
-        <button type="submit">Yes, <?= $action === 'mark' ? 'Mark as Sold' : 'Unmark as Sold' ?></button>
+        <input type="hidden" name="action" value="<?= htmlspecialchars($action) ?>">
+        <button type="submit">Yes</button>
+        <a href="edit_vehicle.php?id=<?= $id ?>">Cancel</a>
     </form>
-    <p><a href="edit_vehicle.php?id=<?= $id ?>">Cancel</a></p>
 </body>
 </html>
