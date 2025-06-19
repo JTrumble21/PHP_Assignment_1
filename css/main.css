@@ -202,20 +202,3 @@ form input[type="submit"]:hover {
   color: #fff;
 }
 
-.login-page::before {
-  content: "";
-  position: absolute;
-  top:0; left:0; right:0; bottom:0;
-  background: rgba(0, 0, 0, 0.5); /* dark overlay */
-  z-index: 0;
-}
-
-.login-page > main {
-  position: relative;
-  z-index: 1;
-  max-width: 400px;
-  margin: 5% auto;
-  background: rgba(0,0,0,0.6);
-  padding: 20px;
-  border-radius: 8px;
-}
