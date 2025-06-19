@@ -199,4 +199,8 @@ form input[type="submit"]:hover {
     color: red;
     margin-bottom: 10px;
 }
+html, body {
+    height: 100%;
+    overflow: hidden;
+}
 
