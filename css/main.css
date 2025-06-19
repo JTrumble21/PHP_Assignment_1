@@ -192,21 +192,30 @@ form input[type="submit"]:hover {
   transition: filter 0.3s ease, opacity 0.3s ease;
 }
 
-body.login-page {
-  margin: 0;
-  height: 100vh;
-  background: url('../assets/images/background_image.jpeg') no-repeat center center fixed;
+.login-page {
+  background-image: url(/assets/images/background_image.jpeg);
   background-size: cover;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: Arial, sans-serif;
+  background-position: center center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  position: relative;
+  color: #fff;
 }
 
-.login-container {
-  background: rgba(255, 255, 255, 0.85);
-  padding: 30px;
+.login-page::before {
+  content: "";
+  position: absolute;
+  top:0; left:0; right:0; bottom:0;
+  background: rgba(0, 0, 0, 0.5); /* dark overlay */
+  z-index: 0;
+}
+
+.login-page > main {
+  position: relative;
+  z-index: 1;
+  max-width: 400px;
+  margin: 5% auto;
+  background: rgba(0,0,0,0.6);
+  padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.3);
-  width: 320px;
 }
