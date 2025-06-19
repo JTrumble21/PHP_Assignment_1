@@ -12,7 +12,7 @@ if (!isset($_SESSION["isLoggedIn"])) {
     <title>Login Success</title>
     <link rel="stylesheet" href="css/main.css">
 </head>
-<body>
+<body class="login_confirmation-page">
     <main>
         <h2>Welcome, <?= htmlspecialchars($_SESSION["username"]) ?>!</h2>
         <p><a href="index.php">Go to Inventory</a></p>

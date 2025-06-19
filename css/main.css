@@ -185,7 +185,6 @@ form input[type="submit"]:hover {
     margin: 0;
     font-family: sans-serif;
 }
-
 .login-page main {
     background-color: rgba(255, 255, 255, 0.85);
     padding: 20px;
@@ -194,7 +193,6 @@ form input[type="submit"]:hover {
     border-radius: 8px;
     box-shadow: 0 0 10px #0003;
 }
-
 .error {
     color: red;
     margin-bottom: 10px;
@@ -203,4 +201,20 @@ html, body {
     height: 100%;
     overflow: hidden;
 }
-
+.login_confirmation-page {
+    background-image: url('../assets/images/background_image.jpeg'); 
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    margin: 0;
+    font-family: sans-serif;
+}
+.login_confirmation-page main {
+    background-color: rgba(255, 255, 255, 0.85);
+    padding: 20px;
+    margin: 10% auto;
+    max-width: 400px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #0003;
+}
