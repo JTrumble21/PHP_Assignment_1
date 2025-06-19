@@ -135,10 +135,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && !isset($_POST['mark_sold']) && !iss
             <button type="submit">Mark as Sold</button>
         </form>
     <?php else: ?>
-        <form method="post" action="unmark_sold.php" style="margin-top: 20px;">
-            <input type="hidden" name="car_id" value="<?= htmlspecialchars($vehicle['id']) ?>">
-            <button type="submit">Unmark as Sold</button>
-        </form>
+        <form action="mark_sold.php" method="post" style="margin-top: 20px;">
+        <input type="hidden" name="car_id" value="<?= htmlspecialchars($vehicle['id']) ?>">
+        <button type="submit">Mark as Sold</button>
+    </form>
     <?php endif; ?>
 
     <p><a href="index.php">← Back to Inventory</a></p>

@@ -12,5 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['car_id'])) {
     header("Location: index.php");
     exit();
 }
+
 header("Location: index.php");
 exit();
