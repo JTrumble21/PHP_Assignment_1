@@ -9,9 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['car_id'])) {
         file_put_contents('sold_vehicles.php', "<?php\nreturn " . var_export($soldCars, true) . ";\n");
     }
 
-    header("Location: edit_vehicle.php?id=$carId");
+    header("Location: index.php");
     exit();
 }
-
 header("Location: index.php");
 exit();
