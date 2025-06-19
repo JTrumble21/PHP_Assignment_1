@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['car_id'], $_POST['act
         }
     } elseif ($action === 'unmark') {
         $soldCars = array_filter($soldCars, fn($id) => $id !== $carId);
-        $soldCars = array_values($soldCars); // reindex
+        $soldCars = array_values($soldCars); 
     }
 
     file_put_contents($file, "<?php\nreturn " . var_export($soldCars, true) . ";\n");

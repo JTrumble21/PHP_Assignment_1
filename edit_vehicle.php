@@ -133,7 +133,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && empty($_POST['action'])) {
     <br>
 
     <?php if ($isSold): ?>
-        <p><a href="confirm_sold.php?id=<?= $vehicle['id'] ?>&action=unmark">Unmark as Sold</a></p>
+        <p><a href="confirm_sold.php?id=<?= $vehicle['id'] ?>&action=unmark">Mark as Available</a></p>
     <?php else: ?>
         <p><a href="confirm_sold.php?id=<?= $vehicle['id'] ?>&action=mark">Mark as Sold</a></p>
     <?php endif; ?>

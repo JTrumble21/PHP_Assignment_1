@@ -67,11 +67,9 @@ $soldCars = file_exists('sold_vehicles.php') ? include 'sold_vehicles.php' : [];
                             <td>$<?= number_format($car['price'], 2) ?></td>
                             <td><a href="detailed_vehicle.php?id=<?= $car['id'] ?>">Details</a></td>
                             <td>
-                                <td>
                                 <a href="edit_vehicle.php?id=<?= $car['id'] ?>">Edit</a> |
                                 <a href="delete_vehicle.php?id=<?= $car['id'] ?>" onclick="return confirm('Delete this vehicle?')">Delete</a> |
                                 <a href="book_test_drive.php?id=<?= $car['id'] ?>">Book Test Drive</a>
-                            </td>
                             </td>
                         </tr>
                     <?php endforeach; ?>
