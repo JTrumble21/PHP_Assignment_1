@@ -1,12 +1,11 @@
 <?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['car_id'], $_POST['action'])) {
     $carId = (int) $_POST['car_id'];
     $action = $_POST['action'];
-    
-    if (!in_array($action, ['mark', 'unmark'])) {
-        header('Location: index.php');
-        exit;
-    }
 
     $file = 'sold_vehicles.php';
     $soldCars = file_exists($file) ? include $file : [];
@@ -17,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['car_id'], $_POST['act
         }
     } elseif ($action === 'unmark') {
         $soldCars = array_filter($soldCars, fn($id) => $id !== $carId);
-        $soldCars = array_values($soldCars); // Reindex
+        $soldCars = array_values($soldCars); // reindex
     }
 
     file_put_contents($file, "<?php\nreturn " . var_export($soldCars, true) . ";\n");
