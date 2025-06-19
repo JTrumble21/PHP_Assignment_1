@@ -1,2 +1,2 @@
 # PHP_Assignment_1
-This is our first assignment in the PHP/MYSQL course. 
+This is the base for all of our assignments in the PHP/MYSQL course. 
