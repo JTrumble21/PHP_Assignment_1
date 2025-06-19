@@ -12,7 +12,7 @@ if (!$id || !is_numeric($id)) {
     exit;
 }
 
-// Fetch vehicle from DB
+// Fetch vehicle
 $query = "SELECT * FROM cars WHERE id = :id";
 $statement = $db->prepare($query);
 $statement->bindValue(':id', $id, PDO::PARAM_INT);
@@ -25,20 +25,21 @@ if (!$vehicle) {
     exit;
 }
 
-// Load sold vehicles list
+// Check sold status
 $soldCars = file_exists('sold_vehicles.php') ? include 'sold_vehicles.php' : [];
 $isSold = in_array($vehicle['id'], $soldCars);
 
-// Handle update form submission (vehicle data update and image upload)
-if ($_SERVER["REQUEST_METHOD"] === "POST" && !isset($_POST['mark_sold']) && !isset($_POST['unmark_sold'])) {
-    $year = $_POST['year'];
-    $make = $_POST['make'];
-    $model = $_POST['model'];
-    $trim = $_POST['trim'];
-    $color = $_POST['color'];
-    $price = $_POST['price'];
+// Handle vehicle update
+if ($_SERVER["REQUEST_METHOD"] === "POST" && empty($_POST['action'])) {
+    $year = $_POST['year'] ?? '';
+    $make = $_POST['make'] ?? '';
+    $model = $_POST['model'] ?? '';
+    $trim = $_POST['trim'] ?? '';
+    $color = $_POST['color'] ?? '';
+    $price = $_POST['price'] ?? '';
     $imagePath = $vehicle['image_path'];
 
+    // Process image if uploaded
     if (isset($_FILES['vehicle_image']) && $_FILES['vehicle_image']['error'] === UPLOAD_ERR_OK) {
         if (!is_dir(UPLOAD_DIR)) {
             mkdir(UPLOAD_DIR, 0755, true);
@@ -56,7 +57,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && !isset($_POST['mark_sold']) && !iss
             if (!empty($vehicle['image_path']) && $vehicle['image_path'] !== PLACEHOLDER_IMAGE) {
                 $baseOld = pathinfo($vehicle['image_path'], PATHINFO_FILENAME);
                 $extOld = pathinfo($vehicle['image_path'], PATHINFO_EXTENSION);
-
                 @unlink(UPLOAD_DIR . $baseOld . '.' . $extOld);
                 @unlink(UPLOAD_DIR . $baseOld . '_100.' . $extOld);
                 @unlink(UPLOAD_DIR . $baseOld . '_400.' . $extOld);
@@ -67,6 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && !isset($_POST['mark_sold']) && !iss
         }
     }
 
+    // Update in DB
     $updateQuery = "UPDATE cars 
                     SET year = :year, make = :make, model = :model, trim = :trim,
                         color = :color, price = :price, image_path = :image_path 
@@ -120,7 +121,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && !isset($_POST['mark_sold']) && !iss
 
         <label>Price:
             <input type="number" step="0.01" name="price" value="<?= htmlspecialchars($vehicle['price']) ?>" required>
-        </label><br><br>
+        </label><br>
 
         <label>Replace Image:
             <input type="file" name="vehicle_image" accept="image/*">
@@ -129,16 +130,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && !isset($_POST['mark_sold']) && !iss
         <button type="submit">Update Vehicle</button>
     </form>
 
-    <?php if (!$isSold): ?>
-        <form method="post" action="mark_sold.php" style="margin-top: 20px;">
-            <input type="hidden" name="car_id" value="<?= htmlspecialchars($vehicle['id']) ?>">
-            <button type="submit">Mark as Sold</button>
-        </form>
+    <br>
+
+    <?php if ($isSold): ?>
+        <p><a href="confirm_sold.php?id=<?= $vehicle['id'] ?>&action=unmark">Unmark as Sold</a></p>
     <?php else: ?>
-        <form action="mark_sold.php" method="post" style="margin-top: 20px;">
-        <input type="hidden" name="car_id" value="<?= htmlspecialchars($vehicle['id']) ?>">
-        <button type="submit">Mark as Sold</button>
-    </form>
+        <p><a href="confirm_sold.php?id=<?= $vehicle['id'] ?>&action=mark">Mark as Sold</a></p>
     <?php endif; ?>
 
     <p><a href="index.php">← Back to Inventory</a></p>
